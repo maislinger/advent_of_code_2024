@@ -1,0 +1,10 @@
+[package]
+name = "aoc"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+rayon = { workspace = true }
+
+aoc_common = { path = "../aoc_common" }
+d01 = { path = "../d01" }
