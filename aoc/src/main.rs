@@ -4,7 +4,11 @@ fn main() {
         .build_global()
         .unwrap();
 
-    let func_input = [(d01::solve, read_input("./inputs/d01"))];
+    let func_input: [(fn(&str) -> aoc_common::AocResult, String); 2] = [
+        (d01::solve, read_input("./inputs/d01")),
+        (d02::solve, read_input("./inputs/d02")),
+    ];
+
     let mut solutions: Vec<aoc_common::AocResult> = Vec::with_capacity(func_input.len());
     for _ in 0..func_input.len() {
         solutions.push(Ok("".into()));

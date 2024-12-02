@@ -1,11 +1,7 @@
 [package]
-name = "aoc"
+name = "d02"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-rayon = { workspace = true }
-
 aoc_common = { path = "../aoc_common" }
-d01 = { path = "../d01" }
-d02 = { path = "../d02" }
