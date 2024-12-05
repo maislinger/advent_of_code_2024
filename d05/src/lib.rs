@@ -152,10 +152,15 @@ where
     }
 
     for _ in 0..values.len() {
+        let mut swapped = false;
         for i in 0..(values.len() - 1) {
             if compare(&values[i], &values[i + 1]) == std::cmp::Ordering::Greater {
                 values.swap(i, i + 1);
+                swapped = true;
             }
+        }
+        if !swapped {
+            break;
         }
     }
 }
