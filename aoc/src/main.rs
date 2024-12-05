@@ -4,9 +4,12 @@ fn main() {
         .build_global()
         .unwrap();
 
-    let func_input: [(fn(&str) -> aoc_common::AocResult, String); 2] = [
+    let func_input: [(fn(&str) -> aoc_common::AocResult, String); 5] = [
         (d01::solve, read_input("./inputs/d01")),
         (d02::solve, read_input("./inputs/d02")),
+        (d03::solve, read_input("./inputs/d03")),
+        (d04::solve, read_input("./inputs/d04")),
+        (d05::solve, read_input("./inputs/d05")),
     ];
 
     let mut solutions: Vec<aoc_common::AocResult> = Vec::with_capacity(func_input.len());
