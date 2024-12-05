@@ -86,7 +86,6 @@ impl Update {
             };
 
             if !r.is_disjoint(&previous) {
-                // println!("{:?} {:?}", r, previous);
                 return false;
             }
 
@@ -101,7 +100,7 @@ impl Update {
     }
 
     fn sort(&mut self, rules: &Rules) {
-        self.data.sort_by(|a, b| {
+        bubble_sort(&mut self.data, |a, b| {
             let b_before_a = if let Some(r) = rules.get(a) {
                 r.contains(b)
             } else {
@@ -141,5 +140,22 @@ impl Updates {
 
     fn iter_mut(&mut self) -> impl Iterator<Item = &mut Update> {
         self.data.iter_mut()
+    }
+}
+
+fn bubble_sort<T, F>(values: &mut [T], compare: F)
+where
+    F: Fn(&T, &T) -> std::cmp::Ordering,
+{
+    if values.len() <= 1 {
+        return;
+    }
+
+    for _ in 0..values.len() {
+        for i in 0..(values.len() - 1) {
+            if compare(&values[i], &values[i + 1]) == std::cmp::Ordering::Greater {
+                values.swap(i, i + 1);
+            }
+        }
     }
 }
