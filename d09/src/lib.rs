@@ -92,6 +92,47 @@ impl Blocks {
     }
 
     fn compress_unfragmented(&mut self) {
+        fn move_index_back_to_id(
+            target_id: u64,
+            index: usize,
+            stop_index: usize,
+            blocks: &Blocks,
+        ) -> Option<usize> {
+            if stop_index == index {
+                return None;
+            }
+
+            let mut index = index;
+            while blocks.blocks[index].id() != Some(target_id) {
+                index = blocks.previous[index]?;
+                if stop_index == index {
+                    return None;
+                }
+            }
+            Some(index)
+        }
+
+        fn move_index_forward_to_next_empty(
+            index: usize,
+            stop_index: usize,
+            blocks: &Blocks,
+        ) -> Option<usize> {
+            let mut index = blocks.next[index]?;
+
+            if stop_index == index {
+                return None;
+            }
+
+            while !blocks.blocks[index].is_empty() {
+                index = blocks.next[index]?;
+
+                if stop_index == index {
+                    return None;
+                }
+            }
+            Some(index)
+        }
+
         if self.is_empty() {
             return;
         }
@@ -100,39 +141,48 @@ impl Blocks {
             return;
         };
 
-        fn find_id(blocks: &[Block], id: u64) -> Option<usize> {
-            blocks.iter().position(|b| b.id() == Some(id))
+        let mut index = self.tail;
+
+        let mut earliest_empty = self.head;
+        match move_index_forward_to_next_empty(earliest_empty, self.tail, self) {
+            Some(new_index) => earliest_empty = new_index,
+            None => return,
         }
 
         for id in (0..=max_id).rev() {
-            let Some(index) = find_id(&self.blocks, id) else {
-                continue;
-            };
+            match move_index_back_to_id(id, index, earliest_empty, self) {
+                Some(new_index) => index = new_index,
+                None => return,
+            }
 
-            let mut index2 = self.head;
+            let mut target_empty = earliest_empty;
             let mut found = false;
             loop {
-                let b1 = &self.blocks[index];
-                let b2 = &self.blocks[index2];
-
-                if b2.is_empty() && b2.len >= b1.len {
+                if self.blocks[target_empty].len >= self.blocks[index].len {
                     found = true;
                     break;
                 }
 
-                if let Some(next) = self.next[index2] {
-                    index2 = next;
+                if let Some(next_index) =
+                    move_index_forward_to_next_empty(target_empty, index, self)
+                {
+                    target_empty = next_index;
                 } else {
-                    break;
-                }
-
-                if index == index2 {
                     break;
                 }
             }
 
-            if found {
-                self.move_file(index, index2);
+            if !found {
+                continue;
+            }
+
+            self.move_file(index, target_empty);
+
+            if !self.blocks[earliest_empty].is_empty() {
+                match move_index_forward_to_next_empty(earliest_empty, index, self) {
+                    Some(new_index) => earliest_empty = new_index,
+                    None => return,
+                }
             }
         }
     }
