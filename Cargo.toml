@@ -12,7 +12,7 @@ members = [
     "d07",
     "d08",
     "d09",
-    "d10",
+    "d10", "d11",
 ]
 
 [workspace.dependencies]
