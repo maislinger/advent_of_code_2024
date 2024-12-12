@@ -1,0 +1,9 @@
+[package]
+name = "d12"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+aoc_common = { path = "../aoc_common" }
+ndarray = { workspace = true }
+rustc-hash = { workspace = true }
