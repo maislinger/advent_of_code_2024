@@ -18,7 +18,7 @@ pub fn solve(input: &str) -> aoc_common::AocResult {
     }
     let s2 = stones.values().sum::<u64>();
 
-    Ok(format!("d10/01 = {}, d10/02 = {}", s1, s2))
+    Ok(format!("d11/01 = {}, d11/02 = {}", s1, s2))
 }
 
 fn blink_stones(target: &mut HashMap<u64, u64>, stones: &mut HashMap<u64, u64>) {
