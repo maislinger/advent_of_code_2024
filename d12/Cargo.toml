@@ -5,5 +5,5 @@ edition = "2021"
 
 [dependencies]
 aoc_common = { path = "../aoc_common" }
-ndarray = { workspace = true }
+nalgebra = { workspace = true }
 rustc-hash = { workspace = true }

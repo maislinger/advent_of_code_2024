@@ -1,9 +1,9 @@
 [package]
-name = "d10"
+name = "d13"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
 aoc_common = { path = "../aoc_common" }
 nalgebra = { workspace = true }
-rustc-hash = { workspace = true }
+regex = { workspace = true }

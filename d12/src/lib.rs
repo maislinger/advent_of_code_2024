@@ -1,6 +1,6 @@
 use rustc_hash::{FxHashMap as HashMap, FxHashSet as HashSet};
 
-type Mat = ndarray::Array<u8, ndarray::Dim<[usize; 2]>>;
+type Mat = nalgebra::OMatrix<u8, nalgebra::Dyn, nalgebra::Dyn>;
 
 pub fn solve(input: &str) -> aoc_common::AocResult {
     // let input = "OOOOO
@@ -24,7 +24,10 @@ fn fence_price(mat: &Mat) -> (u64, u64) {
     let mut cluster = HashSet::default();
     let mut todo = Vec::new();
 
-    for ((i, j), &v) in mat.indexed_iter() {
+    let height = mat.nrows();
+    let width = mat.ncols();
+
+    for (i, j, v) in (0..width).flat_map(|j| (0..height).map(move |i| (i, j, mat[(i, j)]))) {
         if visited.contains_key(&(i, j)) {
             continue;
         }
@@ -41,7 +44,7 @@ fn fence_price(mat: &Mat) -> (u64, u64) {
             cluster.insert((i, j));
             visited.insert((i, j), v);
 
-            for (ni, nj) in neighbors(i, j, mat.shape()[1], mat.shape()[0]) {
+            for (ni, nj) in neighbors(i, j, mat.ncols(), mat.nrows()) {
                 if visited.contains_key(&(ni, nj)) || mat[(ni, nj)] != v {
                     continue;
                 }
@@ -55,7 +58,7 @@ fn fence_price(mat: &Mat) -> (u64, u64) {
         for &(i, j) in cluster.iter() {
             field_count += 1;
             fence_count += 4;
-            for (ni, nj) in neighbors(i, j, mat.shape()[1], mat.shape()[0]) {
+            for (ni, nj) in neighbors(i, j, mat.ncols(), mat.nrows()) {
                 if cluster.contains(&(ni, nj)) {
                     fence_count -= 1;
                 }
@@ -217,8 +220,6 @@ fn parse_input(input: &str) -> Result<Mat, aoc_common::AocError> {
         return Err(aoc_common::AocError::InvalidInput);
     }
 
-    let result = ndarray::Array::from_shape_vec((height, width), buffer)
-        .map_err(|_| aoc_common::AocError::InvalidInput)?;
-
+    let result = Mat::from_vec(height, width, buffer);
     Ok(result)
 }

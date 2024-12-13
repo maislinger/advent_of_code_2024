@@ -1,6 +1,7 @@
 use rustc_hash::FxHashSet as HashSet;
 
-type Mat = ndarray::Array<u8, ndarray::Dim<[usize; 2]>>;
+// type Mat = nalgebra::Array<u8, nalgebra::Dim<[usize; 2]>>;
+type Mat = nalgebra::OMatrix<u8, nalgebra::Dyn, nalgebra::Dyn>;
 
 pub fn solve(input: &str) -> aoc_common::AocResult {
     let mat = parse_input(input)?;
@@ -19,14 +20,16 @@ fn trailhead_rating(mat: &Mat) -> u64 {
 }
 
 fn trailhead_helper(mat: &Mat, multiroutes: bool) -> u64 {
-    let (height, width) = mat.dim();
+    // let (height, width) = mat.dim();
+    let height = mat.nrows();
+    let width = mat.ncols();
 
     let mut result = 0;
 
     let mut visited = HashSet::default();
     let mut todo = Vec::new();
 
-    for ((i, j), &v) in mat.indexed_iter() {
+    for (i, j, v) in (0..width).flat_map(|j| (0..height).map(move |i| (i, j, mat[(i, j)]))) {
         if v != 0 {
             continue;
         }
@@ -108,8 +111,6 @@ fn parse_input(input: &str) -> Result<Mat, aoc_common::AocError> {
         return Err(aoc_common::AocError::InvalidInput);
     }
 
-    let result = ndarray::Array::from_shape_vec((height, width), buffer)
-        .map_err(|_| aoc_common::AocError::InvalidInput)?;
-
+    let result = Mat::from_vec(height, width, buffer);
     Ok(result)
 }
