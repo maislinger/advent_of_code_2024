@@ -1,0 +1,10 @@
+[package]
+name = "d14"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+aoc_common = { path = "../aoc_common" }
+nalgebra = { workspace = true }
+regex = { workspace = true }
+rustc-hash = { workspace = true }
