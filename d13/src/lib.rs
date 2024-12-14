@@ -17,7 +17,7 @@ Prize: X=(\d+), Y=(\d+)",
         s2 += claw.min_tokens(10_000_000_000_000);
     }
 
-    Ok(format!("d12/01 = {}, d12/02 = {}", s1, s2))
+    Ok(format!("d13/01 = {}, d13/02 = {}", s1, s2))
 }
 
 #[derive(Debug, Clone, Copy)]
